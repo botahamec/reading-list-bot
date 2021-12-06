@@ -8,6 +8,7 @@ use managers::secrets::SecretManager;
 use serenity::{
 	async_trait,
 	client::{Context, EventHandler},
+	framework::StandardFramework,
 	model::{channel::Message, prelude::Ready},
 	Client,
 };
@@ -58,6 +59,8 @@ async fn main() {
 
 	let secret_manager = SecretManager::default();
 
+	let framework = StandardFramework::new();
+
 	// Configure the client with your Discord bot token in the environment.
 	let token = secret_manager
 		.discord_token()
@@ -66,8 +69,9 @@ async fn main() {
 	// Create a new instance of the Client, logging in as a bot. This will
 	// automatically prepend your bot token with "Bot ", which is a requirement
 	// by Discord for bot users.
-	let mut client = Client::builder(&token)
+	let mut client = Client::builder(token)
 		.event_handler(Handler)
+		.framework(framework)
 		.await
 		.expect("Err creating client");
 
